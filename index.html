@@ -236,4 +236,164 @@ placeholder="اكتب الاسم"
 
 </div>
 
+<script>
+
+let profiles =
+JSON.parse(localStorage.getItem("profiles")) || [];
+
+let currentProfile = "";
+
+function openModal(){
+document.getElementById("modal").style.display="flex";
+}
+
+function closeModal(){
+document.getElementById("modal").style.display="none";
+document.getElementById("profileName").value="";
+}
+
+function saveProfiles(){
+localStorage.setItem(
+"profiles",
+JSON.stringify(profiles)
+);
+}
+
+function renderProfiles(){
+
+const container =
+document.getElementById("profiles");
+
+container.innerHTML="";
+
+profiles.forEach(name=>{
+
+const div =
+document.createElement("div");
+
+div.className="profile";
+
+div.textContent=name;
+
+div.onclick=()=>{
+
+currentProfile=name;
+
+document.getElementById("profileScreen")
+.style.display="none";
+
+document.getElementById("app")
+.style.display="block";
+
+showHome();
+
+};
+
+container.appendChild(div);
+
+});
+
+}
+
+function createProfile(){
+
+const input =
+document.getElementById("profileName");
+
+const name =
+input.value.trim();
+
+if(!name) return;
+
+profiles.push(name);
+
+saveProfiles();
+
+renderProfiles();
+
+closeModal();
+
+}
+
+function showHome(){
+
+document.getElementById("pageContent")
+.innerHTML=`
+
+<h1>مرحباً ${currentProfile}</h1>
+
+<div class="card">
+آخر مسلسل تمت مشاهدته
 </div>
+
+<div class="card">
+عدد المسلسلات: 0
+</div>
+
+`;
+
+}
+
+function showWatching(){
+
+document.getElementById("pageContent")
+.innerHTML=`
+
+<h1>مسلسلاتي</h1>
+
+<div class="card">
+لا توجد مسلسلات حالياً
+</div>
+
+<button class="bigPlus">
++
+</button>
+
+`;
+
+}
+
+function showSearch(){
+
+document.getElementById("pageContent")
+.innerHTML=`
+
+<h1>البحث</h1>
+
+<div class="card">
+سيتم إضافة البحث لاحقاً
+</div>
+
+`;
+
+}
+
+function showProfile(){
+
+document.getElementById("pageContent")
+.innerHTML=`
+
+<h1>${currentProfile}</h1>
+
+<div class="card">
+عدد المسلسلات: 0
+</div>
+
+<div class="card">
+عدد الحلقات: 0
+</div>
+
+<div class="card">
+وقت المشاهدة: 0 ساعة
+</div>
+
+`;
+
+}
+
+renderProfiles();
+
+</script>
+
+  </body>
+</html>
