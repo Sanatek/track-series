@@ -6,7 +6,6 @@
 <title>Snatek Time</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -162,41 +161,18 @@ border-radius:14px;
 margin-top:12px;
 }
 
-.searchInput{
-width:100%;
-padding:12px;
-border:none;
-border-radius:10px;
-background:#1c1c1c;
-color:white;
-margin-top:15px;
-}
-
-.searchBtn{
-width:100%;
-padding:12px;
-border:none;
-border-radius:10px;
-margin-top:10px;
-background:#2563eb;
-color:white;
-cursor:pointer;
-}
-
 .poster{
 width:80px;
 height:120px;
 object-fit:cover;
 border-radius:10px;
 }
-
 </style>
 </head>
 
 <body>
 
 <div id="profileScreen" class="screen">
-
 <div class="center">
 
 <div class="logo">
@@ -210,7 +186,6 @@ Snatek Time
 </button>
 
 </div>
-
 </div>
 
 <div id="app">
@@ -227,30 +202,18 @@ Snatek Time
 </div>
 
 <div id="modal" class="modal">
-
 <div class="modalBox">
 
 <h2>إضافة بروفايل</h2>
 
-<input
-id="profileName"
-placeholder="اكتب الاسم"
->
+<input id="profileName" placeholder="اكتب الاسم">
 
 <div class="modalButtons">
-
-<button class="ok" onclick="createProfile()">
-تمام
-</button>
-
-<button class="cancel" onclick="closeModal()">
-إلغاء
-</button>
-
+<button class="ok" onclick="createProfile()">تمام</button>
+<button class="cancel" onclick="closeModal()">إلغاء</button>
 </div>
 
 </div>
-
 </div>
 
 <script>
@@ -335,16 +298,16 @@ closeModal();
 
 function showHome(){
 
-document.getElementById("pageContent")
-.innerHTML = `
-
+document.getElementById("pageContent").innerHTML = `
 <h1>مرحباً ${currentProfile}</h1>
 
 <div class="card">
 عدد المسلسلات:
 ${seriesData[currentProfile] ? seriesData[currentProfile].length : 0}
 </div>
-function showWatching(){
+`;
+}
+  function showWatching(){
 
 if(!seriesData[currentProfile]){
 seriesData[currentProfile]=[];
@@ -393,9 +356,7 @@ class="poster"
 
 <div>
 
-<b style="font-size:20px;">
-${series.name}
-</b>
+<b>${series.name}</b>
 
 <br><br>
 
@@ -425,8 +386,16 @@ document.getElementById("pageContent").innerHTML = `
 
 <input
 id="searchInput"
-class="searchInput"
-placeholder="ابحث عن مسلسل..."
+placeholder="ابحث عن مسلسل"
+style="
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+margin-top:15px;
+background:#1c1c1c;
+color:white;
+"
 oninput="searchSeries()"
 >
 
@@ -444,7 +413,9 @@ document.getElementById("pageContent").innerHTML = `
 
 <div class="card">
 عدد المسلسلات:
-${seriesData[currentProfile] ? seriesData[currentProfile].length : 0}
+${seriesData[currentProfile]
+? seriesData[currentProfile].length
+: 0}
 </div>
 
 `;
@@ -459,8 +430,9 @@ document.getElementById("searchInput")
 
 if(query.length < 2){
 
-document.getElementById("searchResults")
-.innerHTML = "";
+document.getElementById(
+"searchResults"
+).innerHTML = "";
 
 return;
 
@@ -472,11 +444,14 @@ const response = await fetch(
 `https://api.themoviedb.org/3/search/tv?api_key=265d9e344b0ec6f4902c4132f543c3f4&query=${encodeURIComponent(query)}`
 );
 
-const data = await response.json();
+const data =
+await response.json();
 
 let html = "";
 
-data.results.slice(0,10).forEach(show=>{
+data.results
+.slice(0,10)
+.forEach(show=>{
 
 const poster =
 show.poster_path
@@ -502,7 +477,16 @@ ${show.id},
 '${show.name.replace(/'/g,"\\'")}',
 '${show.poster_path || ""}'
 )"
-class="searchBtn"
+style="
+width:100%;
+padding:10px;
+margin-top:10px;
+border:none;
+border-radius:10px;
+background:#2563eb;
+color:white;
+cursor:pointer;
+"
 >
 ➕ إضافة
 </button>
@@ -513,20 +497,26 @@ class="searchBtn"
 
 });
 
-document.getElementById("searchResults")
-.innerHTML = html;
+document.getElementById(
+"searchResults"
+).innerHTML = html;
 
 }catch(error){
 
-document.getElementById("searchResults")
-.innerHTML =
+document.getElementById(
+"searchResults"
+).innerHTML =
 '<div class="card">فشل البحث</div>';
 
 }
 
 }
 
-function addSeriesFromSearch(id,name,poster){
+function addSeriesFromSearch(
+id,
+name,
+poster
+){
 
 if(!seriesData[currentProfile]){
 seriesData[currentProfile]=[];
@@ -534,14 +524,17 @@ seriesData[currentProfile]=[];
 
 const exists =
 seriesData[currentProfile]
-.find(s => s.id === id);
+.find(
+s => s.id === id
+);
 
 if(exists){
 alert("المسلسل موجود مسبقاً");
 return;
 }
 
-seriesData[currentProfile].push({
+seriesData[currentProfile]
+.push({
 id:id,
 name:name,
 poster:poster,
@@ -554,8 +547,6 @@ localStorage.setItem(
 JSON.stringify(seriesData)
 );
 
-alert("تمت الإضافة");
-
 showWatching();
 
 }
@@ -564,40 +555,49 @@ async function openSeries(seriesId){
 
 const series =
 seriesData[currentProfile]
-.find(s => s.id === seriesId);
+.find(
+s => s.id === seriesId
+);
 
 if(!series) return;
 
-document.getElementById("pageContent")
-.innerHTML =
+document.getElementById(
+"pageContent"
+).innerHTML =
 '<div class="card">جاري التحميل...</div>';
 
 try{
 
-const response = await fetch(
+const response =
+await fetch(
 `https://api.themoviedb.org/3/tv/${series.id}?api_key=265d9e344b0ec6f4902c4132f543c3f4`
 );
 
-const data = await response.json();
+const data =
+await response.json();
 
 let seasonsHtml = "";
 
 data.seasons.forEach(season=>{
 
-if(season.season_number===0) return;
+if(
+season.season_number === 0
+) return;
 
 seasonsHtml += `
 
 <div
 class="card"
-onclick="openSeason(
+onclick="
+openSeason(
 ${series.id},
 ${season.season_number}
 )"
 style="cursor:pointer;"
 >
 
-الموسم ${season.season_number}
+الموسم
+${season.season_number}
 
 <br>
 
@@ -610,8 +610,9 @@ ${season.episode_count}
 
 });
 
-document.getElementById("pageContent")
-.innerHTML = `
+document.getElementById(
+"pageContent"
+).innerHTML = `
 
 <h1>${series.name}</h1>
 
@@ -621,103 +622,11 @@ ${seasonsHtml}
 
 }catch(error){
 
-document.getElementById("pageContent")
-.innerHTML =
+document.getElementById(
+"pageContent"
+).innerHTML =
 '<div class="card">فشل التحميل</div>';
 
 }
-
-}
-
-async function openSeason(
-seriesId,
-seasonNumber
-){
-
-const series =
-seriesData[currentProfile]
-.find(s => s.id === seriesId);
-
-try{
-
-const response = await fetch(
-`https://api.themoviedb.org/3/tv/${seriesId}/season/${seasonNumber}?api_key=265d9e344b0ec6f4902c4132f543c3f4`
-);
-
-const data = await response.json();
-
-let html = `
-<h1>${series.name}</h1>
-<h2>الموسم ${seasonNumber}</h2>
-`;
-
-data.episodes.forEach(ep=>{
-
-html += `
-
-<div
-class="card"
-onclick="setEpisode(
-${seriesId},
-${seasonNumber},
-${ep.episode_number}
-)"
-style="cursor:pointer;"
->
-
-الحلقة ${ep.episode_number}
-
-<br>
-
-${ep.name}
-
-</div>
-
-`;
-
-});
-
-document.getElementById("pageContent")
-.innerHTML = html;
-
-}catch(error){
-
-document.getElementById("pageContent")
-.innerHTML =
-'<div class="card">فشل تحميل الحلقات</div>';
-
-}
-
-}
-
-function setEpisode(
-seriesId,
-season,
-episode
-){
-
-const series =
-seriesData[currentProfile]
-.find(s => s.id === seriesId);
-
-series.season = season;
-series.episode = episode;
-
-localStorage.setItem(
-"seriesData",
-JSON.stringify(seriesData)
-);
-
-showWatching();
-
-}
-
-renderProfiles();
-
-</script>
-
-</body>
-</html>
-`;
 
 }
