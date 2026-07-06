@@ -3,70 +3,232 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Track Series</title>
+<title>Track</title>
 
 <style>
-body{
+
+*{
     margin:0;
-    background:#111;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#0f0f0f;
     color:white;
-    font-family:sans-serif;
-}
-
-header{
-    text-align:center;
-    padding:40px 20px;
-}
-
-h1{
-    font-size:42px;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
 .container{
-    max-width:1000px;
-    margin:auto;
-    padding:20px;
+    text-align:center;
 }
 
-.card{
-    background:#1c1c1c;
-    border-radius:15px;
-    padding:20px;
+h1{
+    font-size:55px;
+    margin-bottom:30px;
+}
+
+.profiles{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.profile{
+    width:120px;
+    height:120px;
+    background:#1d1d1d;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:20px;
+}
+
+.add-btn{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    border:none;
+    background:#252525;
+    color:white;
+    font-size:45px;
+    cursor:pointer;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-box{
+    background:#1a1a1a;
+    padding:25px;
+    border-radius:18px;
+    width:320px;
+}
+
+.modal-box h2{
     margin-bottom:15px;
 }
 
-button{
-    background:#4f46e5;
-    color:white;
+.modal-box input{
+    width:100%;
+    padding:12px;
     border:none;
-    padding:12px 20px;
     border-radius:10px;
+    margin-bottom:15px;
 }
+
+.actions{
+    display:flex;
+    gap:10px;
+}
+
+.actions button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.ok{
+    background:#3b82f6;
+    color:white;
+}
+
+.cancel{
+    background:#333;
+    color:white;
+}
+
 </style>
 </head>
 
 <body>
 
-<header>
-    <h1>Track Series</h1>
-    <p>تابع تقدمك في المسلسلات مع أصدقائك</p>
-</header>
-
 <div class="container">
 
-    <div class="card">
-        <h2>Breaking Bad</h2>
-        <p>آخر حلقة شاهدتها: S2E5</p>
-        <button>تحديث التقدم</button>
-    </div>
+    <h1>Snatek Time</h1>
 
-    <div class="card">
-        <h2>Game of Thrones</h2>
-        <p>آخر حلقة شاهدتها: S5E3</p>
-        <button>تحديث التقدم</button>
+    <div class="profiles" id="profiles"></div>
+
+    <button class="add-btn" onclick="openModal()">+</button>
+
+</div>
+
+<div class="modal" id="modal">
+
+    <div class="modal-box">
+
+        <h2>إضافة بروفايل</h2>
+
+        <input
+            type="text"
+            id="profileName"
+            placeholder="اكتب الاسم"
+        >
+
+        <div class="actions">
+
+            <button class="ok" onclick="createProfile()">
+                تمام
+            </button>
+
+            <button class="cancel" onclick="closeModal()">
+                إلغاء
+            </button>
+
+        </div>
+
     </div>
 
 </div>
+
+<script>
+
+let profiles =
+JSON.parse(localStorage.getItem("profiles")) || [];
+
+function saveProfiles(){
+    localStorage.setItem(
+        "profiles",
+        JSON.stringify(profiles)
+    );
+}
+
+function renderProfiles(){
+
+    const container =
+    document.getElementById("profiles");
+
+    container.innerHTML = "";
+
+    profiles.forEach(name=>{
+
+        const div =
+        document.createElement("div");
+
+        div.className = "profile";
+
+        div.textContent = name;
+
+        container.appendChild(div);
+
+    });
+
+}
+
+function openModal(){
+    document.getElementById("modal")
+    .style.display = "flex";
+}
+
+function closeModal(){
+
+    document.getElementById("modal")
+    .style.display = "none";
+
+    document.getElementById("profileName")
+    .value = "";
+
+}
+
+function createProfile(){
+
+    const input =
+    document.getElementById("profileName");
+
+    const name =
+    input.value.trim();
+
+    if(!name) return;
+
+    profiles.push(name);
+
+    saveProfiles();
+
+    renderProfiles();
+
+    closeModal();
+
+}
+
+renderProfiles();
+
+</script>
 
 </body>
 </html>
