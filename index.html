@@ -185,6 +185,82 @@ function renderProfiles(){
 
         div.textContent = name;
 
+        div.onclick = ()=>{
+
+            localStorage.setItem(
+                "currentProfile",
+                name
+            );
+
+            document.body.innerHTML = `
+            
+            <div style="
+            min-height:100vh;
+            background:#0f0f0f;
+            color:white;
+            padding-bottom:80px;
+            ">
+
+                <div id="pageContent"
+                style="
+                padding:25px;
+                text-align:center;
+                ">
+
+                    <h1>مرحباً ${name}</h1>
+                    <p>الصفحة الرئيسية</p>
+
+                </div>
+
+                <div style="
+                position:fixed;
+                bottom:0;
+                right:0;
+                left:0;
+                height:70px;
+                background:#1a1a1a;
+                display:flex;
+                justify-content:space-around;
+                align-items:center;
+                border-top:1px solid #333;
+                ">
+
+                    <button onclick="
+                    document.getElementById('pageContent').innerHTML=
+                    '<h1>الحساب</h1><p>الإحصائيات لاحقاً</p>'
+                    ">
+                    👤
+                    </button>
+
+                    <button onclick="
+                    document.getElementById('pageContent').innerHTML=
+                    '<h1>البحث</h1><p>البحث عن المسلسلات</p>'
+                    ">
+                    🔍
+                    </button>
+
+                    <button onclick="
+                    document.getElementById('pageContent').innerHTML=
+                    '<h1>المشاهدة</h1><p>قائمة المسلسلات</p>'
+                    ">
+                    📺
+                    </button>
+
+                    <button onclick="
+                    document.getElementById('pageContent').innerHTML=
+                    '<h1>الرئيسية</h1><p>مرحباً ${name}</p>'
+                    ">
+                    🏠
+                    </button>
+
+                </div>
+
+            </div>
+
+            `;
+
+        };
+
         container.appendChild(div);
 
     });
