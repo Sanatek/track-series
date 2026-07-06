@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Snatek Time</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -34,7 +32,7 @@ text-align:center;
 }
 
 .logo{
-font-size:55px;
+font-size:50px;
 font-weight:bold;
 margin-bottom:30px;
 }
@@ -168,7 +166,9 @@ font-size:35px;
 background:#2563eb;
 color:white;
 margin-top:20px;
+cursor:pointer;
 }
+
 .seriesItem{
 background:#1c1c1c;
 padding:15px;
@@ -182,7 +182,6 @@ font-size:18px;
 <body>
 
 <div id="profileScreen" class="screen">
-
 <div class="center">
 
 <div class="logo">
@@ -196,7 +195,6 @@ Snatek Time
 </button>
 
 </div>
-
 </div>
 
 <div id="app">
@@ -204,15 +202,10 @@ Snatek Time
 <div id="pageContent"></div>
 
 <div class="bottomNav">
-
 <button onclick="showHome()">🏠</button>
-
 <button onclick="showWatching()">📺</button>
-
 <button onclick="showSearch()">🔍</button>
-
 <button onclick="showProfile()">👤</button>
-
 </div>
 
 </div>
@@ -223,10 +216,7 @@ Snatek Time
 
 <h2>إضافة بروفايل</h2>
 
-<input
-id="profileName"
-placeholder="اكتب الاسم"
->
+<input id="profileName" placeholder="اكتب الاسم">
 
 <div class="modalButtons">
 
@@ -242,13 +232,16 @@ placeholder="اكتب الاسم"
 
 </div>
 
+</div>
+
 <script>
 
 let profiles =
 JSON.parse(localStorage.getItem("profiles")) || [];
 
 let currentProfile = "";
-  let seriesData =
+
+let seriesData =
 JSON.parse(localStorage.getItem("seriesData")) || {};
 
 function openModal(){
@@ -325,19 +318,17 @@ closeModal();
 
 function showHome(){
 
-document.getElementById("pageContent")
-.innerHTML=`
-
+document.getElementById("pageContent").innerHTML = `
 <h1>مرحباً ${currentProfile}</h1>
 
 <div class="card">
-آخر مسلسل تمت مشاهدته
+عدد المسلسلات:
+${seriesData[currentProfile] ? seriesData[currentProfile].length : 0}
 </div>
 
 <div class="card">
-عدد المسلسلات: 0
+قريباً: إحصائيات المشاهدة
 </div>
-
 `;
 
 }
@@ -375,75 +366,18 @@ ${series}
 }
 
 html += `
-<button class="bigPlus"
-onclick="addSeries()">
+<button class="bigPlus" onclick="addSeries()">
 +
 </button>
 `;
 
-document.getElementById("pageContent")
-.innerHTML = html;
+document.getElementById("pageContent").innerHTML = html;
 
 }
 
-document.getElementById("pageContent")
-.innerHTML=`
-
-<h1>مسلسلاتي</h1>
-
-<div class="card">
-لا توجد مسلسلات حالياً
-</div>
-
-<button class="bigPlus">
-+
-</button>
-
-`;
-
-}
-
-function showSearch(){
-
-document.getElementById("pageContent")
-.innerHTML=`
-
-<h1>البحث</h1>
-
-<div class="card">
-سيتم إضافة البحث لاحقاً
-</div>
-
-`;
-
-}
-
-function showProfile(){
-
-document.getElementById("pageContent")
-.innerHTML=`
-
-<h1>${currentProfile}</h1>
-
-<div class="card">
-عدد المسلسلات: 0
-</div>
-
-<div class="card">
-عدد الحلقات: 0
-</div>
-
-<div class="card">
-وقت المشاهدة: 0 ساعة
-</div>
-
-`;
-
-}
 function addSeries(){
 
-let name =
-prompt("اسم المسلسل");
+let name = prompt("اسم المسلسل");
 
 if(!name) return;
 
@@ -461,9 +395,43 @@ JSON.stringify(seriesData)
 showWatching();
 
 }
+
+function showSearch(){
+
+document.getElementById("pageContent").innerHTML = `
+<h1>البحث</h1>
+
+<div class="card">
+ميزة البحث سنضيفها لاحقاً
+</div>
+`;
+
+}
+
+function showProfile(){
+
+document.getElementById("pageContent").innerHTML = `
+<h1>${currentProfile}</h1>
+
+<div class="card">
+عدد المسلسلات:
+${seriesData[currentProfile] ? seriesData[currentProfile].length : 0}
+</div>
+
+<div class="card">
+عدد الحلقات: 0
+</div>
+
+<div class="card">
+وقت المشاهدة: 0 ساعة
+</div>
+`;
+
+}
+
 renderProfiles();
 
 </script>
 
-  </body>
+</body>
 </html>
