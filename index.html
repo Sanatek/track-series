@@ -169,7 +169,13 @@ background:#2563eb;
 color:white;
 margin-top:20px;
 }
-
+.seriesItem{
+background:#1c1c1c;
+padding:15px;
+border-radius:14px;
+margin-top:10px;
+font-size:18px;
+}
 </style>
 </head>
 
@@ -242,6 +248,8 @@ let profiles =
 JSON.parse(localStorage.getItem("profiles")) || [];
 
 let currentProfile = "";
+  let seriesData =
+JSON.parse(localStorage.getItem("seriesData")) || {};
 
 function openModal(){
 document.getElementById("modal").style.display="flex";
@@ -336,6 +344,48 @@ document.getElementById("pageContent")
 
 function showWatching(){
 
+if(!seriesData[currentProfile]){
+seriesData[currentProfile]=[];
+}
+
+let html = `
+<h1>مسلسلاتي</h1>
+`;
+
+if(seriesData[currentProfile].length===0){
+
+html += `
+<div class="card">
+لا يوجد مسلسلات حالياً
+</div>
+`;
+
+}else{
+
+seriesData[currentProfile].forEach(series=>{
+
+html += `
+<div class="seriesItem">
+${series}
+</div>
+`;
+
+});
+
+}
+
+html += `
+<button class="bigPlus"
+onclick="addSeries()">
++
+</button>
+`;
+
+document.getElementById("pageContent")
+.innerHTML = html;
+
+}
+
 document.getElementById("pageContent")
 .innerHTML=`
 
@@ -390,7 +440,27 @@ document.getElementById("pageContent")
 `;
 
 }
+function addSeries(){
 
+let name =
+prompt("اسم المسلسل");
+
+if(!name) return;
+
+if(!seriesData[currentProfile]){
+seriesData[currentProfile]=[];
+}
+
+seriesData[currentProfile].push(name);
+
+localStorage.setItem(
+"seriesData",
+JSON.stringify(seriesData)
+);
+
+showWatching();
+
+}
 renderProfiles();
 
 </script>
