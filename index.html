@@ -3,115 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Track</title>
+
+<title>Snatek Time</title>
 
 <style>
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
 }
 
 body{
-    background:#0f0f0f;
-    color:white;
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+background:#0f0f0f;
+color:white;
+min-height:100vh;
 }
 
-.container{
-    text-align:center;
+.screen{
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
 }
 
-h1{
-    font-size:55px;
-    margin-bottom:30px;
+.center{
+text-align:center;
+}
+
+.logo{
+font-size:55px;
+font-weight:bold;
+margin-bottom:30px;
 }
 
 .profiles{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:15px;
-    margin-bottom:25px;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
+margin-bottom:20px;
 }
 
 .profile{
-    width:120px;
-    height:120px;
-    background:#1d1d1d;
-    border-radius:18px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-size:20px;
+width:120px;
+height:120px;
+background:#1c1c1c;
+border-radius:18px;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+font-size:20px;
 }
 
-.add-btn{
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    border:none;
-    background:#252525;
-    color:white;
-    font-size:45px;
-    cursor:pointer;
+.addBtn{
+width:90px;
+height:90px;
+border-radius:50%;
+border:none;
+font-size:45px;
+background:#252525;
+color:white;
+cursor:pointer;
 }
 
 .modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.7);
-    display:none;
-    justify-content:center;
-    align-items:center;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.75);
+display:none;
+justify-content:center;
+align-items:center;
 }
 
-.modal-box{
-    background:#1a1a1a;
-    padding:25px;
-    border-radius:18px;
-    width:320px;
+.modalBox{
+background:#1a1a1a;
+padding:20px;
+border-radius:16px;
+width:320px;
 }
 
-.modal-box h2{
-    margin-bottom:15px;
+.modalBox h2{
+margin-bottom:15px;
 }
 
-.modal-box input{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    margin-bottom:15px;
+.modalBox input{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+margin-bottom:15px;
 }
 
-.actions{
-    display:flex;
-    gap:10px;
+.modalButtons{
+display:flex;
+gap:10px;
 }
 
-.actions button{
-    flex:1;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
+.modalButtons button{
+flex:1;
+padding:12px;
+border:none;
+border-radius:10px;
+cursor:pointer;
 }
 
 .ok{
-    background:#3b82f6;
-    color:white;
+background:#2563eb;
+color:white;
 }
 
 .cancel{
-    background:#333;
-    color:white;
+background:#333;
+color:white;
+}
+
+#app{
+display:none;
+min-height:100vh;
+padding-bottom:80px;
+}
+
+#pageContent{
+padding:20px;
+}
+
+.bottomNav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:70px;
+background:#181818;
+border-top:1px solid #333;
+display:flex;
+justify-content:space-around;
+align-items:center;
+}
+
+.bottomNav button{
+background:none;
+border:none;
+color:white;
+font-size:26px;
+cursor:pointer;
+}
+
+.card{
+background:#1c1c1c;
+padding:15px;
+border-radius:14px;
+margin-top:12px;
+}
+
+.bigPlus{
+width:70px;
+height:70px;
+border-radius:50%;
+border:none;
+font-size:35px;
+background:#2563eb;
+color:white;
+margin-top:20px;
 }
 
 </style>
@@ -119,191 +175,65 @@ h1{
 
 <body>
 
-<div class="container">
+<div id="profileScreen" class="screen">
 
-    <h1>Snatek Time</h1>
+<div class="center">
 
-    <div class="profiles" id="profiles"></div>
-
-    <button class="add-btn" onclick="openModal()">+</button>
-
+<div class="logo">
+Snatek Time
 </div>
 
-<div class="modal" id="modal">
+<div id="profiles" class="profiles"></div>
 
-    <div class="modal-box">
-
-        <h2>إضافة بروفايل</h2>
-
-        <input
-            type="text"
-            id="profileName"
-            placeholder="اكتب الاسم"
-        >
-
-        <div class="actions">
-
-            <button class="ok" onclick="createProfile()">
-                تمام
-            </button>
-
-            <button class="cancel" onclick="closeModal()">
-                إلغاء
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-<script>
-
-let profiles =
-JSON.parse(localStorage.getItem("profiles")) || [];
-
-function saveProfiles(){
-    localStorage.setItem(
-        "profiles",
-        JSON.stringify(profiles)
-    );
-}
-
-function renderProfiles(){
-
-    const container =
-    document.getElementById("profiles");
-
-    container.innerHTML = "";
-
-    profiles.forEach(name=>{
-
-        const div =
-        document.createElement("div");
-
-        div.className = "profile";
-
-        div.textContent = name;
-
-        div.onclick = ()=>{
-
-            localStorage.setItem(
-                "currentProfile",
-                name
-            );
-
-            document.body.innerHTML = `
-            
-            <div style="
-            min-height:100vh;
-            background:#0f0f0f;
-            color:white;
-            padding-bottom:80px;
-            ">
-
-                <div id="pageContent"
-                style="
-                padding:25px;
-                text-align:center;
-                ">
-
-                    <h1>مرحباً ${name}</h1>
-                    <p>الصفحة الرئيسية</p>
-
-                </div>
-
-                <div style="
-                position:fixed;
-                bottom:0;
-                right:0;
-                left:0;
-                height:70px;
-                background:#1a1a1a;
-                display:flex;
-                justify-content:space-around;
-                align-items:center;
-                border-top:1px solid #333;
-                ">
-
-                    <button onclick="
-                    document.getElementById('pageContent').innerHTML=
-                    '<h1>الحساب</h1><p>الإحصائيات لاحقاً</p>'
-                    ">
-                    👤
-                    </button>
-
-                    <button onclick="
-                    document.getElementById('pageContent').innerHTML=
-                    '<h1>البحث</h1><p>البحث عن المسلسلات</p>'
-                    ">
-                    🔍
-                    </button>
-
-                   <button onclick="
-document.getElementById('pageContent').innerHTML=
-'<h1>متابعة المشاهدة</h1><p>سيتم إضافة المسلسلات هنا لاحقاً</p>'
-">
-📺
+<button class="addBtn" onclick="openModal()">
++
 </button>
-                    <button onclick="
-                    document.getElementById('pageContent').innerHTML=
-                    '<h1>الرئيسية</h1><p>مرحباً ${name}</p>'
-                    ">
-                    🏠
-                    </button>
 
-                </div>
+</div>
 
-            </div>
+</div>
 
-            `;
+<div id="app">
 
-        };
+<div id="pageContent"></div>
 
-        container.appendChild(div);
+<div class="bottomNav">
 
-    });
+<button onclick="showHome()">🏠</button>
 
-}
+<button onclick="showWatching()">📺</button>
 
-function openModal(){
-    document.getElementById("modal")
-    .style.display = "flex";
-}
+<button onclick="showSearch()">🔍</button>
 
-function closeModal(){
+<button onclick="showProfile()">👤</button>
 
-    document.getElementById("modal")
-    .style.display = "none";
+</div>
 
-    document.getElementById("profileName")
-    .value = "";
+</div>
 
-}
+<div id="modal" class="modal">
 
-function createProfile(){
+<div class="modalBox">
 
-    const input =
-    document.getElementById("profileName");
+<h2>إضافة بروفايل</h2>
 
-    const name =
-    input.value.trim();
+<input
+id="profileName"
+placeholder="اكتب الاسم"
+>
 
-    if(!name) return;
+<div class="modalButtons">
 
-    profiles.push(name);
+<button class="ok" onclick="createProfile()">
+تمام
+</button>
 
-    saveProfiles();
+<button class="cancel" onclick="closeModal()">
+إلغاء
+</button>
 
-    renderProfiles();
+</div>
 
-    closeModal();
+</div>
 
-}
-
-renderProfiles();
-
-</script>
-
-</body>
-</html>
+</div>
