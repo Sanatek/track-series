@@ -355,59 +355,87 @@ html += `
 
 seriesData[currentProfile].forEach(series=>{
 
+const poster =
+series.poster
+? `https://image.tmdb.org/t/p/w300${series.poster}`
+: "";
+
 html += `
+
 <div class="seriesItem">
-${series}
+
+${poster ? `
+<img
+src="${poster}"
+style="
+width:100%;
+border-radius:12px;
+margin-bottom:10px;
+">
+` : ""}
+
+<b>${series.name}</b>
+
+<br><br>
+
+الموسم ${series.season}
+<br>
+الحلقة ${series.episode}
+
 </div>
+
 `;
 
 });
-
 }
 
-html += `
-<button class="bigPlus" onclick="addSeries()">
-+
-</button>
-`;
+
 
 document.getElementById("pageContent").innerHTML = html;
 
 }
 
-function addSeries(){
 
-let name = prompt("اسم المسلسل");
-
-if(!name) return;
-
-if(!seriesData[currentProfile]){
-seriesData[currentProfile]=[];
-}
-
-seriesData[currentProfile].push(name);
-
-localStorage.setItem(
-"seriesData",
-JSON.stringify(seriesData)
-);
-
-showWatching();
-
-}
 
 function showSearch(){
 
 document.getElementById("pageContent").innerHTML = `
+
 <h1>البحث</h1>
 
-<div class="card">
-ميزة البحث سنضيفها لاحقاً
-</div>
+<input
+id="searchInput"
+placeholder="ابحث عن مسلسل"
+style="
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+margin-top:15px;
+background:#1c1c1c;
+color:white;
+">
+
+<button
+onclick="searchSeries()"
+style="
+margin-top:10px;
+padding:12px;
+width:100%;
+border:none;
+border-radius:10px;
+background:#2563eb;
+color:white;
+cursor:pointer;
+">
+بحث
+</button>
+
+<div id="searchResults"></div>
+
 `;
 
 }
-
 function showProfile(){
 
 document.getElementById("pageContent").innerHTML = `
@@ -428,7 +456,122 @@ ${seriesData[currentProfile] ? seriesData[currentProfile].length : 0}
 `;
 
 }
+async function searchSeries(){
 
+const query =
+document.getElementById("searchInput").value.trim();
+
+if(!query) return;
+
+document.getElementById("searchResults").innerHTML =
+'<div class="card">جاري البحث...</div>';
+
+try{
+
+const response = await fetch(
+`https://api.themoviedb.org/3/search/tv?api_key=265d9e344b0ec6f4902c4132f543c3f4&language=en-US&query=${encodeURIComponent(query)}`
+);
+
+const data = await response.json();
+
+let html = "";
+
+data.results.slice(0,10).forEach(show=>{
+
+const poster =
+show.poster_path
+? `https://image.tmdb.org/t/p/w300${show.poster_path}`
+: "";
+
+html += `
+
+<div class="card">
+
+${poster ? `
+<img
+src="${poster}"
+style="
+width:100%;
+border-radius:12px;
+margin-bottom:10px;
+">
+` : ""}
+
+<h3>${show.name}</h3>
+
+<p>
+${show.first_air_date || ""}
+</p>
+
+<button
+onclick="addSeriesFromSearch(
+${show.id},
+'${show.name.replace(/'/g,"\\'")}',
+'${show.poster_path || ""}'
+)"
+style="
+margin-top:10px;
+padding:10px;
+width:100%;
+border:none;
+border-radius:10px;
+background:#2563eb;
+color:white;
+cursor:pointer;
+"
+>
+➕ إضافة
+</button>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("searchResults").innerHTML = html;
+
+}catch(error){
+
+document.getElementById("searchResults").innerHTML =
+'<div class="card">فشل البحث</div>';
+
+}
+
+}
+
+function addSeriesFromSearch(id,name,poster){
+
+if(!seriesData[currentProfile]){
+seriesData[currentProfile]=[];
+}
+
+const exists =
+seriesData[currentProfile].find(
+s => s.id === id
+);
+
+if(exists){
+alert("المسلسل موجود مسبقاً");
+return;
+}
+
+seriesData[currentProfile].push({
+id:id,
+name:name,
+poster:poster,
+season:1,
+episode:1
+});
+
+localStorage.setItem(
+"seriesData",
+JSON.stringify(seriesData)
+);
+
+alert("تمت الإضافة");
+
+}
 renderProfiles();
 
 </script>
